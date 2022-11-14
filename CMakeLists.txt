@@ -74,6 +74,7 @@ endif()
 #
 # Build libcurl
 #
+if (WIN32)
 ExternalProject_Add(curl
   PREFIX curl
   GIT_REPOSITORY "https://github.com/curl/curl.git"
@@ -95,6 +96,28 @@ ExternalProject_Add(curl
     -DCMAKE_INSTALL_PREFIX:PATH=${TRITON_THIRD_PARTY_INSTALL_PREFIX}/curl
   PATCH_COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/tools/install_src.py --src <SOURCE_DIR> ${INSTALL_SRC_DEST_ARG}
 )
+else()
+ExternalProject_Add(curl
+  PREFIX curl
+  GIT_REPOSITORY "https://github.com/curl/curl.git"
+  GIT_TAG "curl-7_66_0"
+  SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/curl/src/curl"
+  EXCLUDE_FROM_ALL ON
+  CMAKE_CACHE_ARGS
+    ${_CMAKE_ARGS_CMAKE_TOOLCHAIN_FILE}
+    ${_CMAKE_ARGS_VCPKG_TARGET_TRIPLET}
+    -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON
+    -DBUILD_TESTING:BOOL=OFF
+    -DBUILD_CURL_EXE:BOOL=OFF
+    -DBUILD_SHARED_LIBS:BOOL=OFF
+    -DCURL_STATICLIB:BOOL=ON
+    -DHTTP_ONLY:BOOL=ON
+    -DCMAKE_USE_OPENSSL:BOOL=ON
+    -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
+    -DCMAKE_INSTALL_PREFIX:PATH=${TRITON_THIRD_PARTY_INSTALL_PREFIX}/curl
+  PATCH_COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/tools/install_src.py --src <SOURCE_DIR> ${INSTALL_SRC_DEST_ARG}
+)
+endif()
 
 #
 # Get the protobuf and grpc source used for the GRPC endpoint. We must
