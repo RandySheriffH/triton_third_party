@@ -99,7 +99,7 @@ else()
 ExternalProject_Add(curl
   PREFIX curl
   GIT_REPOSITORY "https://github.com/curl/curl.git"
-  GIT_TAG "curl-7_66_0"
+  GIT_TAG "curl-7_82_0"
   SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/curl/src/curl"
   EXCLUDE_FROM_ALL ON
   CMAKE_CACHE_ARGS
